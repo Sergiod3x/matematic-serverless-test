@@ -217,7 +217,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matematic/dev/1637783256739-2021-11-24T19:47:36.739Z/matematic.zip"
+                "S3Key": "serverless/matematic/dev/1637783451814-2021-11-24T19:50:51.814Z/matematic.zip"
               },
               "Handler": "handler.matematic",
               "Runtime": "nodejs12.x",
@@ -247,7 +247,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matematic/dev/1637783256739-2021-11-24T19:47:36.739Z/matematic.zip"
+                "S3Key": "serverless/matematic/dev/1637783451814-2021-11-24T19:50:51.814Z/matematic.zip"
               },
               "Handler": "handler.list",
               "Runtime": "nodejs12.x",
@@ -277,7 +277,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matematic/dev/1637783256739-2021-11-24T19:47:36.739Z/matematic.zip"
+                "S3Key": "serverless/matematic/dev/1637783451814-2021-11-24T19:50:51.814Z/matematic.zip"
               },
               "Handler": "handler.get",
               "Runtime": "nodejs12.x",
@@ -300,34 +300,34 @@
               "GetLogGroup"
             ]
           },
-          "MatematicLambdaVersionXGU2wZsekP1Kytb3jTfAYykSmfY6uLQcsDR0ftX50y4": {
+          "MatematicLambdaVersionqx1g0rftxsFyrdvv0rNWVNBzpQf8CYeQDHY7HH1M3A": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "MatematicLambdaFunction"
               },
-              "CodeSha256": "chrX2RkfIFuw2/cDilllcaiIDpIzO3mo2/h/XGtcB6k="
+              "CodeSha256": "l7B7oVnKXh3iZEuJT5JZ45aXHG9sSOCM9Na1x0KFV3o="
             }
           },
-          "ListLambdaVersionmqPtrMkXVzYw6KuJidnRZjvdmURn4V5NCPEdUpoeA0": {
+          "ListLambdaVersionn8Bu2kh3Ew2klxMs00MBEAm2oPWbZFB5YyUYotF6bw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ListLambdaFunction"
               },
-              "CodeSha256": "chrX2RkfIFuw2/cDilllcaiIDpIzO3mo2/h/XGtcB6k="
+              "CodeSha256": "l7B7oVnKXh3iZEuJT5JZ45aXHG9sSOCM9Na1x0KFV3o="
             }
           },
-          "GetLambdaVersionci9U9M7xc4xRISOZql504kivOVWRv5FFV29J4Fd8w": {
+          "GetLambdaVersion6SrarNZASYTWCDYpcfRbDU6Vat9AJXDvg5Bj5iysOQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetLambdaFunction"
               },
-              "CodeSha256": "chrX2RkfIFuw2/cDilllcaiIDpIzO3mo2/h/XGtcB6k="
+              "CodeSha256": "l7B7oVnKXh3iZEuJT5JZ45aXHG9sSOCM9Na1x0KFV3o="
             }
           },
           "ApiGatewayRestApi": {
@@ -537,7 +537,7 @@
               "GetLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1637783255589": {
+          "ApiGatewayDeployment1637783450598": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -694,7 +694,7 @@
           "MatematicLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "MatematicLambdaVersionXGU2wZsekP1Kytb3jTfAYykSmfY6uLQcsDR0ftX50y4"
+              "Ref": "MatematicLambdaVersionqx1g0rftxsFyrdvv0rNWVNBzpQf8CYeQDHY7HH1M3A"
             },
             "Export": {
               "Name": "sls-matematic-dev-MatematicLambdaFunctionQualifiedArn"
@@ -703,7 +703,7 @@
           "ListLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ListLambdaVersionmqPtrMkXVzYw6KuJidnRZjvdmURn4V5NCPEdUpoeA0"
+              "Ref": "ListLambdaVersionn8Bu2kh3Ew2klxMs00MBEAm2oPWbZFB5YyUYotF6bw"
             },
             "Export": {
               "Name": "sls-matematic-dev-ListLambdaFunctionQualifiedArn"
@@ -712,7 +712,7 @@
           "GetLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetLambdaVersionci9U9M7xc4xRISOZql504kivOVWRv5FFV29J4Fd8w"
+              "Ref": "GetLambdaVersion6SrarNZASYTWCDYpcfRbDU6Vat9AJXDvg5Bj5iysOQ"
             },
             "Export": {
               "Name": "sls-matematic-dev-GetLambdaFunctionQualifiedArn"
@@ -849,7 +849,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "MatematicLambdaVersionXGU2wZsekP1Kytb3jTfAYykSmfY6uLQcsDR0ftX50y4"
+        "versionLogicalId": "MatematicLambdaVersionqx1g0rftxsFyrdvv0rNWVNBzpQf8CYeQDHY7HH1M3A"
       },
       "list": {
         "handler": "handler.list",
@@ -868,7 +868,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "ListLambdaVersionmqPtrMkXVzYw6KuJidnRZjvdmURn4V5NCPEdUpoeA0"
+        "versionLogicalId": "ListLambdaVersionn8Bu2kh3Ew2klxMs00MBEAm2oPWbZFB5YyUYotF6bw"
       },
       "get": {
         "handler": "handler.get",
@@ -887,7 +887,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetLambdaVersionci9U9M7xc4xRISOZql504kivOVWRv5FFV29J4Fd8w"
+        "versionLogicalId": "GetLambdaVersion6SrarNZASYTWCDYpcfRbDU6Vat9AJXDvg5Bj5iysOQ"
       }
     },
     "resources": {
@@ -936,7 +936,7 @@
     "artifact": "D:\\serverless\\matematic\\.serverless\\matematic.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/matematic/dev/1637783256739-2021-11-24T19:47:36.739Z",
+    "artifactDirectoryName": "serverless/matematic/dev/1637783451814-2021-11-24T19:50:51.814Z",
     "artifact": "matematic.zip"
   }
 }

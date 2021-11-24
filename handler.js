@@ -2,8 +2,8 @@
 
 const AWS = require('aws-sdk');
 
-const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
 const TABLE = process.env.USERS_TABLE;
+const DYNAMODB = new AWS.DynamoDB.DocumentClient()
 
 module.exports = {
   matematic: async (event) => {
@@ -65,7 +65,7 @@ module.exports = {
     };
 
     try {
-      await dynamoDbClient.put(params).promise();
+      await DYNAMODB.put(params).promise();
     } catch (error) {
       console.log(error);
       const response = {
@@ -90,8 +90,7 @@ module.exports = {
     }
     let scanResult = {}
     try {
-      let dynamodb = new AWS.DynamoDB.DocumentClient()
-      scanResult = await dynamodb.scan(scanParams).promise()
+      scanResult = await DYNAMODB.scan(scanParams).promise()
     } catch (error) {
       console.log('Ci sono problemi nella lettura del database: ' + error + " Questi i parametri del DB :" + scanParams.TableName)
       const response = {
@@ -129,8 +128,7 @@ module.exports = {
 
     let getResult = {}
     try {
-      let dynamodb = new AWS.DynamoDB.DocumentClient()
-      getResult = await dynamodb.get(getParams).promise()
+      getResult = await DYNAMODB.get(getParams).promise()
     } catch (error) {
       console.log('Ci sono problemi nella lettura del database: ' + error + " Questi i parametri del DB :" + getParams.TableName)
       const response = {
