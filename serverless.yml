@@ -23,7 +23,22 @@ frameworkVersion: '2'
 provider:
   name: aws
   runtime: nodejs12.x
-  lambdaHashingVersion: 20201221
+  lambdaHashingVersion: '20201221'
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [ UsersTable, Arn ]
+  environment:
+    USERS_TABLE: firstTable2
 
 # you can overwrite defaults here
 #  stage: dev
@@ -117,3 +132,16 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: numberOne
+            AttributeType: S
+        KeySchema:
+          - AttributeName: numberOne
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: firstTable2

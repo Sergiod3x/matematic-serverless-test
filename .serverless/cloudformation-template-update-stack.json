@@ -133,6 +133,25 @@
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/matematic-dev*:*:*"
                     }
                   ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Query",
+                    "dynamodb:Scan",
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::GetAtt": [
+                        "UsersTable",
+                        "Arn"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
@@ -161,13 +180,18 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/matematic/dev/1637754629353-2021-11-24T11:50:29.353Z/matematic.zip"
+          "S3Key": "serverless/matematic/dev/1637766086066-2021-11-24T15:01:26.066Z/matematic.zip"
         },
         "Handler": "handler.matematic",
         "Runtime": "nodejs12.x",
         "FunctionName": "matematic-dev-matematic",
         "MemorySize": 1024,
         "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "USERS_TABLE": "firstTable2"
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -179,14 +203,14 @@
         "MatematicLogGroup"
       ]
     },
-    "MatematicLambdaVersionwblYLxCR1dCHsbpFVK20RBBarrmUAxsCDd7dh7ZkTM": {
+    "MatematicLambdaVersionetXTWQzzMM6k3cgKwKUZW4pxb1oJwfsUJS3LyBHcfaw": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "MatematicLambdaFunction"
         },
-        "CodeSha256": "uCUO0Ys/x+bjtsWUQLSRzIikeMsnfVuWzokobB/GaTo="
+        "CodeSha256": "jkvIpuiwLCT9CTZC5adudMMsgkmX6jFcWd0JBffIZvA="
       }
     },
     "ApiGatewayRestApi": {
@@ -262,7 +286,7 @@
         "MatematicLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1637754628230": {
+    "ApiGatewayDeployment1637766084914": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -310,6 +334,25 @@
           ]
         }
       }
+    },
+    "UsersTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "numberOne",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "numberOne",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "TableName": "firstTable2"
+      }
     }
   },
   "Outputs": {
@@ -324,7 +367,7 @@
     "MatematicLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "MatematicLambdaVersionwblYLxCR1dCHsbpFVK20RBBarrmUAxsCDd7dh7ZkTM"
+        "Ref": "MatematicLambdaVersionetXTWQzzMM6k3cgKwKUZW4pxb1oJwfsUJS3LyBHcfaw"
       },
       "Export": {
         "Name": "sls-matematic-dev-MatematicLambdaFunctionQualifiedArn"
