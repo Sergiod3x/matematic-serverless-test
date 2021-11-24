@@ -118,6 +118,18 @@
               "LogGroupName": "/aws/lambda/matematic-dev-matematic"
             }
           },
+          "ListLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/matematic-dev-list"
+            }
+          },
+          "GetLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/matematic-dev-get"
+            }
+          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -205,7 +217,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/matematic/dev/1637766086066-2021-11-24T15:01:26.066Z/matematic.zip"
+                "S3Key": "serverless/matematic/dev/1637783256739-2021-11-24T19:47:36.739Z/matematic.zip"
               },
               "Handler": "handler.matematic",
               "Runtime": "nodejs12.x",
@@ -228,14 +240,94 @@
               "MatematicLogGroup"
             ]
           },
-          "MatematicLambdaVersionetXTWQzzMM6k3cgKwKUZW4pxb1oJwfsUJS3LyBHcfaw": {
+          "ListLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/matematic/dev/1637783256739-2021-11-24T19:47:36.739Z/matematic.zip"
+              },
+              "Handler": "handler.list",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "matematic-dev-list",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "USERS_TABLE": "firstTable2"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "ListLogGroup"
+            ]
+          },
+          "GetLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/matematic/dev/1637783256739-2021-11-24T19:47:36.739Z/matematic.zip"
+              },
+              "Handler": "handler.get",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "matematic-dev-get",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "USERS_TABLE": "firstTable2"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetLogGroup"
+            ]
+          },
+          "MatematicLambdaVersionXGU2wZsekP1Kytb3jTfAYykSmfY6uLQcsDR0ftX50y4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "MatematicLambdaFunction"
               },
-              "CodeSha256": "jkvIpuiwLCT9CTZC5adudMMsgkmX6jFcWd0JBffIZvA="
+              "CodeSha256": "chrX2RkfIFuw2/cDilllcaiIDpIzO3mo2/h/XGtcB6k="
+            }
+          },
+          "ListLambdaVersionmqPtrMkXVzYw6KuJidnRZjvdmURn4V5NCPEdUpoeA0": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ListLambdaFunction"
+              },
+              "CodeSha256": "chrX2RkfIFuw2/cDilllcaiIDpIzO3mo2/h/XGtcB6k="
+            }
+          },
+          "GetLambdaVersionci9U9M7xc4xRISOZql504kivOVWRv5FFV29J4Fd8w": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetLambdaFunction"
+              },
+              "CodeSha256": "chrX2RkfIFuw2/cDilllcaiIDpIzO3mo2/h/XGtcB6k="
             }
           },
           "ApiGatewayRestApi": {
@@ -260,6 +352,48 @@
                 ]
               },
               "PathPart": "calc",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceList": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "list",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceGet": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "get",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceGetNameVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceGet"
+              },
+              "PathPart": "{name}",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
@@ -311,7 +445,99 @@
               "MatematicLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1637766084914": {
+          "ApiGatewayMethodListGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceList"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ListLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ListLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodGetNameVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceGetNameVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "GetLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayDeployment1637783255589": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -320,7 +546,9 @@
               "StageName": "dev"
             },
             "DependsOn": [
-              "ApiGatewayMethodCalcPost"
+              "ApiGatewayMethodCalcPost",
+              "ApiGatewayMethodListGet",
+              "ApiGatewayMethodGetNameVarGet"
             ]
           },
           "MatematicLambdaPermissionApiGateway": {
@@ -329,6 +557,80 @@
               "FunctionName": {
                 "Fn::GetAtt": [
                   "MatematicLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ListLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ListLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetLambdaFunction",
                   "Arn"
                 ]
               },
@@ -392,10 +694,28 @@
           "MatematicLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "MatematicLambdaVersionetXTWQzzMM6k3cgKwKUZW4pxb1oJwfsUJS3LyBHcfaw"
+              "Ref": "MatematicLambdaVersionXGU2wZsekP1Kytb3jTfAYykSmfY6uLQcsDR0ftX50y4"
             },
             "Export": {
               "Name": "sls-matematic-dev-MatematicLambdaFunctionQualifiedArn"
+            }
+          },
+          "ListLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ListLambdaVersionmqPtrMkXVzYw6KuJidnRZjvdmURn4V5NCPEdUpoeA0"
+            },
+            "Export": {
+              "Name": "sls-matematic-dev-ListLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetLambdaVersionci9U9M7xc4xRISOZql504kivOVWRv5FFV29J4Fd8w"
+            },
+            "Export": {
+              "Name": "sls-matematic-dev-GetLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -529,7 +849,45 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "MatematicLambdaVersionetXTWQzzMM6k3cgKwKUZW4pxb1oJwfsUJS3LyBHcfaw"
+        "versionLogicalId": "MatematicLambdaVersionXGU2wZsekP1Kytb3jTfAYykSmfY6uLQcsDR0ftX50y4"
+      },
+      "list": {
+        "handler": "handler.list",
+        "events": [
+          {
+            "http": {
+              "path": "list",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "matematic-dev-list",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "ListLambdaVersionmqPtrMkXVzYw6KuJidnRZjvdmURn4V5NCPEdUpoeA0"
+      },
+      "get": {
+        "handler": "handler.get",
+        "events": [
+          {
+            "http": {
+              "path": "get/{name}",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "matematic-dev-get",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "GetLambdaVersionci9U9M7xc4xRISOZql504kivOVWRv5FFV29J4Fd8w"
       }
     },
     "resources": {
@@ -578,7 +936,7 @@
     "artifact": "D:\\serverless\\matematic\\.serverless\\matematic.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/matematic/dev/1637766086066-2021-11-24T15:01:26.066Z",
+    "artifactDirectoryName": "serverless/matematic/dev/1637783256739-2021-11-24T19:47:36.739Z",
     "artifact": "matematic.zip"
   }
 }

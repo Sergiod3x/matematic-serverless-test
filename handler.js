@@ -2,8 +2,8 @@
 
 const AWS = require('aws-sdk');
 
-const ddb = new AWS.DynamoDB.DocumentClient();
-const USERS_TABLE = process.env.USERS_TABLE;
+const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
+const TABLE = process.env.USERS_TABLE;
 
 module.exports = {
   matematic: async (event) => {
@@ -58,9 +58,9 @@ module.exports = {
     }
 
     const params = {
-      TableName: USERS_TABLE,
+      TableName: TABLE,
       Item: {
-        numberOne: 26
+        numberOne: risultato.toString()
       },
     };
 
@@ -70,17 +70,95 @@ module.exports = {
       console.log(error);
       const response = {
         statusCode: 500,
-        body: JSON.stringify("Errore imprevisto: "+error),
-    };
-    return response;
+        body: JSON.stringify("Errore imprevisto: " + error),
+      };
+      return response;
     }
 
 
     const response = {
 
       statusCode: 200,
-      body: JSON.stringify(outputString + " " + risultato + " Table name " + USERS_TABLE),
+      body: JSON.stringify(outputString + " " + risultato + " Table name " + TABLE),
     };
     return response;
-  }
+  },
+  list: async (event) => {
+
+    let scanParams = {
+      TableName: TABLE
+    }
+    let scanResult = {}
+    try {
+      let dynamodb = new AWS.DynamoDB.DocumentClient()
+      scanResult = await dynamodb.scan(scanParams).promise()
+    } catch (error) {
+      console.log('Ci sono problemi nella lettura del database: ' + error + " Questi i parametri del DB :" + scanParams.TableName)
+      const response = {
+        statusCode: 500,
+        body: JSON.stringify("Errore imprevisto: " + error + " Questi i parametri del DB :" + scanParams),
+      };
+      return response;
+    }
+
+    if (scanResult.Items === null || !Array.isArray(scanResult.Items) || scanResult.Items.length === 0) {
+      const response = {
+        statusCode: 404,
+        body: JSON.stringify("Errore nel contenuto: " + scanResult.Items),
+      };
+      return response;
+    }
+    return {
+      statusCode: 200,
+      body: JSON.stringify(scanResult.Items.map(matematic => {
+        return {
+          number: matematic.numberOne
+        }
+      }))
+    }
+  },
+  get: async (event) => {
+    let getParams = {
+      TableName: TABLE,
+      Key: {
+        numberOne: event.pathParameters.name.toString()
+      }
+    }
+
+  
+
+    let getResult = {}
+    try {
+      let dynamodb = new AWS.DynamoDB.DocumentClient()
+      getResult = await dynamodb.get(getParams).promise()
+    } catch (error) {
+      console.log('Ci sono problemi nella lettura del database: ' + error + " Questi i parametri del DB :" + getParams.TableName)
+      const response = {
+        statusCode: 500,
+        body: JSON.stringify("Errore imprevisto: " + error + " Questi i parametri del DB :" + getParams.TableName),
+      };
+      return response;
+    }
+
+    
+    
+    if (getResult.Item === undefined) {
+      const response = {
+        statusCode: 404,
+        body: JSON.stringify("L'elemento non è presente nel database" ),
+      };
+      return response;
+    }
+
+    // const response = {
+    //   statusCode: 500,
+    //   body: JSON.stringify("Errore imprevisto: Questi i parametri del DB :" + getParams.TableName),
+    // };
+    // return response;
+    
+    return {
+      statusCode: 200,
+      body: JSON.stringify("La chiave che cerchi è: "+getResult.Item.numberOne)
+    }
+  },
 };

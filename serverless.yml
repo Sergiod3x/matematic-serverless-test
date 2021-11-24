@@ -81,6 +81,18 @@ functions:
       - http:
           path: /calc
           method: post
+  list:
+    handler: handler.list
+    events:
+      - http:
+          path: /list
+          method: get
+  get:
+    handler: handler.get
+    events:
+      - http:
+          path: /get/{name}
+          method: get        
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
