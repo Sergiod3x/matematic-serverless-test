@@ -12,7 +12,7 @@ module.exports = {
     try {
       bodyObj = JSON.parse(event.body)
     } catch (jsonError) {
-      console.log('There was an error parsing the body - C è un errore', jsonError)
+      console.log("Impossibile recuperare i parametri dal body", jsonError)
       return {
         statusCode: 400
       }
@@ -97,15 +97,23 @@ module.exports = {
       return response;
     }
 
-
-
     var numberOne = bodyObj.numberOne;
+    var numberTwo = bodyObj.numberTwo;
 
+    if (numberOne === undefined || numberTwo === undefined) {
+      console.log('Parametri mancanti')
+      const response = {
+        statusCode: 400,
+        body: JSON.stringify(numberOne + " o " + numberTwo + ' sono nulli')
+      };
+      return response;
+    }
 
     const params = {
       TableName: TABLE,
       Item: {
-        numberOne: numberOne.toString()
+        numberOne: numberOne.toString(),
+        numberTwo: numberTwo.toString()
       },
     };
 
@@ -120,11 +128,10 @@ module.exports = {
       return response;
     }
 
-
     const response = {
 
       statusCode: 200,
-      body: JSON.stringify("Chiavi " + numberOne + " caricate sulla tabella " + TABLE),
+      body: JSON.stringify("Chiave " + numberOne + " caricata sulla tabella " + TABLE),
     };
     return response;
   },
@@ -138,7 +145,7 @@ module.exports = {
     try {
       scanResult = await DYNAMODB.scan(scanParams).promise()
     } catch (error) {
-      console.log('Ci sono problemi nella lettura del database: ' + error + " Questi i parametri del DB :" + scanParams.TableName)
+      console.log('Ci sono problemi nella lettura del database: ' + error + " Questi i parametri del DB :" + scanParams)
       const response = {
         statusCode: 500,
         body: JSON.stringify("Errore imprevisto: " + error + " Questi i parametri del DB :" + scanParams),
@@ -157,7 +164,8 @@ module.exports = {
       statusCode: 200,
       body: JSON.stringify(scanResult.Items.map(matematic => {
         return {
-          number: matematic.numberOne
+          number: matematic.numberOne,
+          numberTwo: matematic.numberTwo
         }
       }))
     }
@@ -184,8 +192,6 @@ module.exports = {
       return response;
     }
 
-
-
     if (getResult.Item === undefined) {
       const response = {
         statusCode: 404,
@@ -194,69 +200,71 @@ module.exports = {
       return response;
     }
 
-    // const response = {
-    //   statusCode: 500,
-    //   body: JSON.stringify("Errore imprevisto: Questi i parametri del DB :" + getParams.TableName),
-    // };
-    // return response;
-
     return {
       statusCode: 200,
-      body: JSON.stringify("La chiave che cerchi è: " + getResult.Item.numberOne)
+      body: JSON.stringify("La chiave che cerchi è: " + getResult.Item.numberOne + " e il valore numberTwo a essa legato è: " + getResult.Item.numberTwo)
     }
   },
-  // update: async (event) => {
-  //   let bodyObj = {}
-  //   try {
-  //     bodyObj = JSON.parse(event.body)
-  //   } catch (error) {
-  //     console.log('Ci sono dei problemi nel recuperare le chiavi'+ error)
-  //     const response = {
-  //       statusCode: 400,
-  //       body: JSON.stringify('Ci sono dei problemi nel recuperare le chiavi: ' + error)
-  //     };
-  //     return response;
-  //   }
-  //   // if (typeof bodyObj.age === 'undefined') {
-  //   //   console.log('Missing parameters')
-  //   //   return {
-  //   //     statusCode: 400
-  //   //   }
-  //   // }
+  update: async (event) => {
+    let bodyObj = {}
+    try {
+      bodyObj = JSON.parse(event.body)
+    } catch (error) {
+      console.log('Ci sono dei problemi nel recuperare le chiavi' + error)
+      const response = {
+        statusCode: 400,
+        body: JSON.stringify('Ci sono dei problemi nel recuperare le chiavi: ' + error)
+      };
+      return response;
+    }
 
-  //   let updateParams = {
-  //     TableName: TABLE,
-  //     Key: {
-  //       numberOne: event.pathParameters.numberOne
-  //     },
-  //     UpdateExpression: 'set #age =:age',
-  //     ExpressionAttributeName: {
-  //       '#age': 'age'
-  //     },
-  //     ExpressionAttributeValues: {
-  //       ':age': bodyObj.age
-  //     },
-  //   }
-  //   try {
-  //     let dynamodb = new AWS.DynamoDB.DocumentClient()
-  //     dynamodb.update(updatetParams).promise()
-  //   } catch (updateError) {
-  //     console.log('There was a problem updatting the kitten')
-  //     console.log('updateParams', updateParams)
-  //     return {
-  //       statusCode: 500
-  //     }
-  //   }
-  //   if (updateResult.Items === null) {
-  //     return {
-  //       statusCode: 404
-  //     }
-  //   }
-  //   return {
-  //     statusCode: 200,
+    var numberTwo = bodyObj.numberTwo;
 
-  //   }
-  // },
+    if (numberTwo === undefined) {
+      console.log('Parametro mancante')
+      const response = {
+        statusCode: 400,
+        body: JSON.stringify(numberTwo + ' è nullo')
+      };
+      return response;
+    }
+
+    let updateParams = {
+      TableName: TABLE,
+      Key: {
+        numberOne: event.pathParameters.name.toString()
+      },
+      UpdateExpression: 'set numberTwo = :numberTwo',
+      ExpressionAttributeName: {
+        'numberTwo': 'numberTwo'
+      },
+      ExpressionAttributeValues: {
+        ':numberTwo': numberTwo
+      }
+    }
+    let updateResult = {}
+    try {
+      updateResult = DYNAMODB.update(updateParams).promise()
+    } catch (error) {
+      console.log('Ci sono problemi a aggiornare il valore')
+      const response = {
+        statusCode: 500,
+        body: JSON.stringify("Ci sono problemi a aggiornare il valore " + err)
+      };
+      return response;
+    }
+    if (updateResult.Items === null) {
+      return {
+        statusCode: 404
+      }
+    }
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify("Il valore modificato è: " + updateParams.Key.numberOne + ' ' + numberTwo)
+    };
+    return response;
+
+  },
   delete: async (event) => {
     let deleteParams = {
       TableName: TABLE,
